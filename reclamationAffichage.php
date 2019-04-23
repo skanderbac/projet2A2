@@ -17,6 +17,7 @@ session_start();
 <!DOCTYPE html>
 <html>
 <head>
+<link rel="icon" href="images/logoG.png" />
 <title>Ghorbel-Optique Réclamation</title>
 <link href="css/bootstrap.css" rel="stylesheet" type="text/css" media="all" />
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
@@ -130,6 +131,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 									<ul>
 										<li><a href="reclamation.php" >Faire une réclamation</a></li>
 										<li><a href="reclamationAffichage.php">Consuler votre réclamation</a></li>
+										<li><a href="avisAffichage.php">Voir les Avis sur notre service</a></li>
 										
 									</ul>
 								</div>

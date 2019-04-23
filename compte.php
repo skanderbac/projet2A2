@@ -1,20 +1,20 @@
 <?PHP
 
-include "../core/reclamationC.php";
-include "../entities/reclamationE.php";
-$reclamationC=new ReclamationC();
-$result=$reclamationC->recupererReclamation($_GET['emaill']);
-	foreach($result as $row){
-		$Probleme=$row['probleme'];
-		$Autre=$row['autre'];
-		$Date_creation=$row['date_creation'];
-		$Etat=$row['etat'];
-		$Email=$row['email'];
-		$Image=$row['image'];
-		$Avis=$row['avis'];
-		$Utilisateur=$row['utilisateur'];
-		$Reponse=$row['reponse'];
+include "../core/userC.php";
+include "../core/natureC.php";
+session_start();  
+	if(!$_SESSION['username'])
+	{
+		header("location: login.php");
+	}
+	else
+	{
+		$user1C=new UserC();
+		$result=$detailUser=$user1C->afficherUtilisateur($_SESSION['username']);
+
 ?>
+
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -62,7 +62,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 							<li><span><i class="glyphicon glyphicon-earphone" class="tele-in"> </i>+216 53 467 028</span></li>			
 						</ul>
 						<ul class=" support-right">
-							<li><a href="logout.php"><i class="glyphicon glyphicon-user" class="men"> </i>Déconnexion</a></li>			
+							<li><a href="logout.php"><i class="glyphicon glyphicon-user" class="men"> </i>Déconneixon</a></li>			
 						</ul>
 						<div class="clearfix"> </div>
 					</div>
@@ -130,9 +130,24 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 								<div class="col1 me-one">
 									<!--<h4>Shop</h4>-->
 									<ul>
-										<li><a href="reclamation.php">Faire une réclamation</a></li>
+										<li><a href="reclamation.php" >Faire une réclamation</a></li>
 										<li><a href="reclamationAffichage.php">Consuler votre réclamation</a></li>
 										<li><a href="avisAffichage.php">Voir les Avis sur notre service</a></li>
+										
+									</ul>
+								</div>
+							</div>
+						</div>
+					</li>
+					<li  class="active" class="grid"><a href="compte.php">Compte</a>
+						<div class="mepanel">
+							<div class="row">
+								<div class="col1 me-one">
+									<!--<h4>Shop</h4>-->
+									<ul>
+										<!--<li><a href="reclamation.php">Faire une réclamation</a></li>
+										<li><a href="reclamationAffichage.php">Consuler votre réclamation</a></li>
+										<li><a href="avisAffichage.php">Voir les Avis sur notre service</a></li>-->
 										
 									</ul>
 								</div>
@@ -164,38 +179,80 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 	<h2>Réclamation</h2>
 </div>
 		<!---->
-		<div class="container">
-			<div class="contact">
-				<form method="POST">
-				<div class=" contact-top">
-						<div>
-							<span>Votre E-mail </span>		
-							<input type="email" name="email" id="inputEmail" class="form-control" placeholder="Adresse Email" required autofocus value="<?php echo $Email ?>">
-						</div>
-						<div>		
-							<div class="available">
+		<div class=" cart-items">
+			 <h3>Consultez votre réclamation</h3>
+				<!--<script>$(document).ready(function(c) {
+					$('.close1').on('click', function(c){
+						$('.cart-header').fadeOut('slow', function(c){
+							$('.cart-header').remove();
+						});
+						});	  
+					});
+			   </script>-->
+			<!--<script>$(document).ready(function(c) {
+					$('.close2').on('click', function(c){
+						$('.cart-header1').fadeOut('slow', function(c){
+							$('.cart-header1').remove();
+						});
+						});	  
+					});
+			   </script>-->
+		<div class="in-check" >
+		  <ul class="unit">
+			<li><span>Nom</span></li>
+			<li><span>Prenom</span></li>		
+			<li><span>Nature</span></li>
+			<div class="clearfix"> </div>
+		  </ul>
+		  <?PHP
+			}
+			foreach($result as $row){
+			?>
+		   <ul class="cart-header">	 
+		   
+			<li><span><?PHP echo $row['nom']; ?></span></li>
+			<li><span><?PHP echo $row['prenom']; ?></span></li>
 
-								<span>Votre Problème </span>	
-								<ul>
-									<li value="<?php echo $Probleme ?>">
-										<select name="probleme">
-										<option>Lunette cassée</option>
-										<option>Probléme lentilles</option>
-										<option>N'est pas le modéle souhaité</option>
-										<option>Les dimensions ne convient pas au visage</option>
-										<option>Autre</option>
-									</select></li>
-									<div class="clearfix"> </div>
-								</ul>
-							</div>						
-						</div>
-						<div>
-							<script language="javascript" type="text/javascript">
+
+
+
+
+
+			<?php 
+				$nature1C= new NatureC();
+				 $resultat=$nature1C->recupererNature($row['id_nature']);
+				 foreach ($resultat as $row ) {
+				 	$type=$row['type'];
+				 }
+			?>
+
+
+
+			<li><span><?PHP 	 echo $type ;    ?></span></li>
+
+
+			<div class="clearfix"> </div>
+			</ul>
+			<?PHP
+			}
+			?>
+		</div>
+		</div>
+<div class="bottom-grid1">
+					
+					
+<!---->
+	<div class="footer">
+		<div class="container">
+			<!--<div class="col-md-4 footer-top">
+				<form method="POST" action="avis.php" enctype="multipart/form-data">
+					<h3>Votre avis sur notre service</h3>
+						<script language="javascript" type="text/javascript">
 									function calculeLongueur(){
    										var iLongueur, iLongueurRestante;
-   										iLongueur = document.getElementById('autre').value.length;
+   										iLongueur = document.getElementById('msg').value.length;
    										if (iLongueur>30) {
-     							    	document.getElementById('autre').value = document.getElementById('autre').value.substring(0,300);
+     							    	document.getElementById('msg').value = document.getElementById('msg').value.substring(0,300);
       									iLongueurRestante = 0;
    										}
    										else {
@@ -207,51 +264,24 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
       								document.getElementById('indic').innerHTML = iLongueurRestante + "&nbsp;caract&egrave;res&nbsp;disponibles";
 									}
 							</script>
-
-							<span>Si vous avez un autre probléme vous pouvez écrire ci-dessous</span>		
-							<textarea onblur="calculeLongueur();" onfocus="calculeLongueur();" onkeydown="calculeLongueur();" onkeyup="calculeLongueur();" name="autre" id="autre" value="Autre" class="form-control"  placeholder="300 Lettres au maximum" /><?php echo $Autre ?></textarea>
-							<span>Vous pouvez uploader l'image du produit</span>
-							<input type="file" name="image" >
-						</div>
-						<!--<div>
-							<span>Vous pouvez uploader l'image du produit</span>
-							<input type="file" name="image">
-						</div>-->
-
-
-						<input type="submit" value="Modifier" name="modifier">	
-				</div>
-			</form>
-			<?PHP
-				}
-			
-			if (isset($_POST['modifier']))
-			{
-				$target="image/".basename($_FILES['image']['name']);
-				$imagE=$_FILES['image']['name'];
-				$datetime = date_create()->format('Y-m-d H:i:s');
-			$reclamation=new Reclamation($_POST['probleme'],$_POST['autre'],$datetime,"non traitée",$_POST['email'],$Image,$Avis,$Utilisateur,$Reponse);
-			$reclamationC->modifierReclamation($reclamation,$Email);
-			?>
-			<script>
-				document.location.replace("reclamationAffichage.php") ;
-			</script>
-			<?php
-		}
-		?>
-		</div>
-	</div>
-<div class="bottom-grid1">
+						<div class="rating">
+					<span>☆</span>
+					<span>☆</span>
+					<span>☆</span>
+					<span>☆</span>
+					<span>☆</span>
+					</div>
+					<input type="email" name="email" id="inputEmail" class="form-control" placeholder="Adresse Email" required autofocus>
 					
-					
-<!---->
-	<div class="footer">
-		<div class="container">
+						<textarea onblur="calculeLongueur();" onfocus="calculeLongueur();" onkeydown="calculeLongueur();" onkeyup="calculeLongueur();" name="msg" id="msg" value="" class="form-control"  placeholder="300 Lettres au maximum" /></textarea>
+						
+							<input type="submit" value="Envoyer" >
+						
+					</form>
+
+			</div>-->
 			<div class="col-md-4 footer-top">
-				
-
 			</div>
-			
 			<div class="col-md-4 footer-bottom">
 				<h3>Contactez nous</h3>
 				<div class="logo-footer">

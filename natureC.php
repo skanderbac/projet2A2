@@ -1,35 +1,14 @@
 <?PHP
 include_once "../config.php";
-class AvisAC {
+class NatureC {
 
-	function afficherAvisA ($avisA){
-		echo "Text: ".$avisA->getText()."<br>";
-		echo "Etoile: ".$avisA->getEtoile()."<br>";
-		echo "date_creation: ".$avisA->getDate_creation()."<br>";
+	function afficherNature ($nature){
+		echo "id: ".$nature->getId()."<br>";
+		echo "type: ".$nature->getType()."<br>";
 	}
 
-	function ajouterAvisA($avisA){
-		$sql="insert into avisarchive (text,etoile,date_creation) values (:text,:etoile,:date_creation)";
-		$db = config::getConnexion();
-		try{
-        $req=$db->prepare($sql);
-        $text=$avisA->getText();
-        $etoile=$avisA->getEtoile();
-       	$date_creation=$avisA->getDate_creation();
-		$req->bindValue(':text',$text);
-		$req->bindValue(':etoile',$etoile);
-		$req->bindValue(':date_creation',$date_creation);
-        $req->execute();
-           
-        }
-        catch (Exception $e){
-            echo 'Erreur: '.$e->getMessage();
-        }
-		
-	}
-
-	function afficherAvisAs(){
-		$sql="SElECT * From avisarchive";
+	function afficherNatures(){
+		$sql="SElECT * From nature";
 		$db = config::getConnexion();
 		try{
 		$liste=$db->query($sql);
@@ -41,8 +20,8 @@ class AvisAC {
 	}
 	
 
-	/*function recupererAvisA($etoile){
-		$sql="SELECT * from avisarchive where etoile='$etoile'";
+	function recupererNature($id){
+		$sql="SELECT type from nature where id='$id'";
 		$db = config::getConnexion();
 		try{
 		$liste=$db->query($sql);
@@ -51,7 +30,7 @@ class AvisAC {
         catch (Exception $e){
             die('Erreur: '.$e->getMessage());
         }
-	}*/
+	}
 
 
 

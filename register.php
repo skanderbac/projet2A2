@@ -1,32 +1,77 @@
 <?php
 	session_start();
-	require('connect.php');
-    if (isset($_POST['username']) && isset($_POST['password'])){
-       $username=$_POST['username'];
-       $password=$_POST['password'];
-       $sql="select * from user where username='$username' and password='$password'";
-       $result=mysqli_query($connection,$sql);
-       $count=mysqli_num_rows($result);
-       if ($count == 1)
-       {
-       		$_SESSION['username'] = $username;
-         // $_SESSION['id'] = $id;
-       }
-       else
-       {
-       	$msg="Invalid username or password";
-       }
-    }
+	
+
     if(isset($_SESSION['username']))
     {
     	//$fmsg= "User already logged in";
     	header("location: reclamation.php");
     }
+    else
+    {
+
+    	include "../entities/userE.php";
+		include "../core/userC.php";
+		//session_start();
+		
+	if(isset($_POST['Enregistrer']))
+	{
+		$username = htmlspecialchars($_POST['username']);
+   		$email = htmlspecialchars($_POST['email']);
+   		$nom = htmlspecialchars($_POST['nom']);
+   		$prenom = htmlspecialchars($_POST['prenom']);
+   		$password1 = htmlspecialchars($_POST['password']);
+   		$password2 = htmlspecialchars($_POST['password_r']);
+
+   		$user2C=new UserC();
+   		$result=$user2C->recupererUser($username);
+   		foreach($result as $row)
+   		{
+		$nomv=$row['nom'];
+		}
+		
+		if (isset($_POST['password']) and isset($_POST['email']) and isset($_POST['nom']) and isset($_POST['prenom']) and isset($_POST['sexe']) and isset($_POST['username']) and  isset($_POST['password_r']))
+		{
+			if ($password1==$password2)
+				{
+					if(!isset($nomv))
+					//empty(recupererUser($username))
+					{
+						$datetime = date_create()->format('Y-m-d H:i:s');
+						$user1=new user($_POST['username'],$_POST['password'],$_POST['email'],$_POST['nom'],$_POST['prenom'],$_POST['sexe'],$datetime,1);
+						$user1C=new UserC();
+						$user1C->ajouterUser($user1);
+
+						header('Location: login.php');
+					}
+					else
+					{
+						$erreur="Le nom d'utilisateur est déjà utilisée !";
+					}
+				}
+				else
+				{
+					$erreur="le mot de passe ne correspondent pas !";
+				}
+
+
+		}
+		else 
+		{
+     		 $erreur = "Tous les champs doivent être complétés !";
+   		}
+	}
+
+
+
+
+
+
 ?>
 <!DOCTYPE html>
 <html>
 <head>
-<title>Connecter</title>
+<title>Enregistrer</title>
 <link href="css/bootstrap.css" rel="stylesheet" type="text/css" media="all" />
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 <script src="js/jquery.min.js"></script>
@@ -167,31 +212,62 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 </div>
 		<!---->
 		<div class="container">
-		<div class="account_grid">
-			   <div class=" login-right">
-			  	<h3>CLIENTS ENREGISTRÉS</h3>
-				<p>Si vous avez un compte avec nous,Connecter vous</p>
-				<form class="form-signin" method="POST">
-				  <div>
-					<span>Utilisateur</span>
-					<input type="text" name="username" class="form-control" placeholder="Utilisateur" required>
-				  </div>
-				  <div>
-					<span>Mot de passe</span>
-					<input  type="password" name="password" id="inputPassword" class="form-control" placeholder="Mot de passe" required> 
-				  </div>
-				  <a class="forgot" href="#">Mot de passe oublié?</a>
-				  <input type="submit" value="S'authentifier">
-			    </form>
-			   </div>	
-			    <div class=" login-left">
-			  	 <h3>NOUVEAU CLIENT</h3>
-				 <p>En créant un compte dans notre magasin, vous pourrez passer plus rapidement du processus de commande, enregistrer plusieurs adresses d'expédition, afficher et suivre vos commandes dans votre compte, etc.</p>
-				 <a class="acount-btn" href="register.php">Créer un compte</a>
-			   </div>
-			
-			 </div>
-		
+		<div class="register">
+		<h3>Informations personnelles</h3>
+		<p><span class="error"> </span></p>
+		  	  <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>"> 
+				
+					
+					<div class="mation">
+					<div>
+						<span>Nom</span>
+						<input type="text" name="nom" value="<?php if(isset($nom)){echo $nom;} ?>" class="form-control" placeholder="Nom" required>
+						<span class="error"></span>
+						
+					</div>
+					<div>
+						<span>Prénom</span>
+						<input type="text" name="prenom" value="<?php if(isset($prenom)){echo $prenom;} ?>" class="form-control" placeholder="Prénom" required>
+						<span class="error"></span>
+					 </div>
+					 <div>
+					 	<div>
+						<span>Nom d'utilisateur</span>
+						<input type="text" name="username" value="<?php if(isset($username)){echo $username;} ?>" class="form-control" placeholder="Utilisateur" required> 
+						<span class="error"></span>
+					 </div>
+					 <div>
+					 	<div>
+					 		<div>
+					 	<span>Vous êtes</span>
+                     <input type="radio" name="sexe" value="femme">Femme<br>
+                      <input type="radio" name="sexe" value="homme">Homme<br>
+                      <span class="error"></span>
+                           </div>
+                           </div>
+						 <span>Adresse Email</span>
+						 <input type="email" name="email" id="inputEmail" value="<?php if(isset($email)){echo $email;} ?>" class="form-control" placeholder="Adresse Email" required autofocus>
+						 <span class="error"></span>
+						 </div>
+						 <div>
+							<span>Mot de passe</span>
+							<input  type="password" name="password" id="inputPassword" class="form-control" placeholder="Mot de passe" required> 						 
+					</div>
+					<div>
+							<span>Confirmation de Mot de passe</span>
+							<input  type="password" name="password_r" id="inputPassword" class="form-control" placeholder="Confirmation de mot de passe" required> 						 
+					</div>
+					 </div>
+				     <input type="submit" value="Enregistrer" name="Enregistrer">
+				</form>
+				<?php
+				if (isset($erreur)) {
+					echo '<font color="red">'.$erreur."</font>";
+				}
+				?>
+				
+				
+		   </div>
 			</div>
 			<!---->
 				<div class="bottom-grid1">
@@ -255,7 +331,10 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 <a href="#to-top" id="toTop" style="display: block;"> <span id="toTopHover" style="opacity: 1;"> </span></a>
 <!----> 
 <!---->
-<?php if(isset($fmsg)){ ?><div class="alert alert-success" role="alert"> <?php echo $fmsg; ?> </div><?php } ?>
-<?php if(isset($msg)){ ?><div class="alert alert-danger" role="alert"> <?php echo $msg; ?> </div><?php } ?>
+
 </body>
 </html>
+<?php
+
+}
+?>

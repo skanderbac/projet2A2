@@ -11,6 +11,7 @@ session_start();
 <!DOCTYPE html>
 <html>
 <head>
+<link rel="icon" href="images/logoG.png" />
 <title>Ghorbel-Optique Réclamation</title>
 <link href="css/bootstrap.css" rel="stylesheet" type="text/css" media="all" />
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
@@ -71,7 +72,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 		 
 			<div class="top-nav">
 				<ul class="memenu skyblue"><li><a href="index.html">Acceuil</a></li>
-					<li class="grid"><a href="#">Produits</a>
+					<li class="grid"><a href="produits.php">Produits</a>
 						<div class="mepanel">
 							<div class="row">
 								<div class="col1 me-one">
@@ -124,6 +125,21 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 									<ul>
 										<li><a href="reclamation.php">Faire une réclamation</a></li>
 										<li><a href="reclamationAffichage.php">Consuler votre réclamation</a></li>
+										<li><a href="avisAffichage.php">Voir les Avis sur notre service</a></li>
+										
+									</ul>
+								</div>
+							</div>
+						</div>
+					</li>
+					<li  class="active" class="grid"><a href="compte.php">Compte</a>
+						<div class="mepanel">
+							<div class="row">
+								<div class="col1 me-one">
+									<!--<h4>Shop</h4>-->
+									<ul>
+										<li><a href="compte.php">Consulter votre Compte</a></li>
+										<li><a href="motpassemodification.php">Modifier le mot de passe</a></li>
 										
 									</ul>
 								</div>

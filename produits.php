@@ -1,20 +1,13 @@
-<?PHP
-
-include "../core/reclamationC.php";
-include "../entities/reclamationE.php";
-$reclamationC=new ReclamationC();
-$result=$reclamationC->recupererReclamation($_GET['emaill']);
-	foreach($result as $row){
-		$Probleme=$row['probleme'];
-		$Autre=$row['autre'];
-		$Date_creation=$row['date_creation'];
-		$Etat=$row['etat'];
-		$Email=$row['email'];
-		$Image=$row['image'];
-		$Avis=$row['avis'];
-		$Utilisateur=$row['utilisateur'];
-		$Reponse=$row['reponse'];
+<?php
+session_start();  
+	if(!$_SESSION['username'])
+	{
+		header("location: login.php");
+	}
+	else
+	{
 ?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -79,7 +72,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 		 
 			<div class="top-nav">
 				<ul class="memenu skyblue"><li><a href="index.html">Acceuil</a></li>
-					<li class="grid"><a href="#">Produits</a>
+					<li class="grid"><a href="produits.php">Produits</a>
 						<div class="mepanel">
 							<div class="row">
 								<div class="col1 me-one">
@@ -139,6 +132,20 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 							</div>
 						</div>
 					</li>
+					<li  class="active" class="grid"><a href="compte.php">Compte</a>
+						<div class="mepanel">
+							<div class="row">
+								<div class="col1 me-one">
+									<!--<h4>Shop</h4>-->
+									<ul>
+										<li><a href="compte.php">Consulter votre Compte</a></li>
+										<li><a href="motpassemodification.php">Modifier le mot de passe</a></li>
+										
+									</ul>
+								</div>
+							</div>
+						</div>
+					</li>
 				</ul>
 				<div class="clearfix"> </div>
 			</div>
@@ -161,27 +168,28 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 					</div>
 <!---->
 <div class="back">
-	<h2>Réclamation</h2>
+	<h2>Produits</h2>
 </div>
 		<!---->
 		<div class="container">
 			<div class="contact">
-				<form method="POST">
+				<form method="POST" action="reclamation1.php" enctype="multipart/form-data">
 				<div class=" contact-top">
 						<div>
 							<span>Votre E-mail </span>		
-							<input type="email" name="email" id="inputEmail" class="form-control" placeholder="Adresse Email" required autofocus value="<?php echo $Email ?>">
+							<input type="email" name="email" id="inputEmail" class="form-control" placeholder="Adresse Email" required autofocus>
+							
 						</div>
 						<div>		
 							<div class="available">
 
 								<span>Votre Problème </span>	
 								<ul>
-									<li value="<?php echo $Probleme ?>">
+									<li>
 										<select name="probleme">
 										<option>Lunette cassée</option>
 										<option>Probléme lentilles</option>
-										<option>N'est pas le modéle souhaité</option>
+										<option>N est pas le modéle souhaité</option>
 										<option>Les dimensions ne convient pas au visage</option>
 										<option>Autre</option>
 									</select></li>
@@ -209,9 +217,9 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 							</script>
 
 							<span>Si vous avez un autre probléme vous pouvez écrire ci-dessous</span>		
-							<textarea onblur="calculeLongueur();" onfocus="calculeLongueur();" onkeydown="calculeLongueur();" onkeyup="calculeLongueur();" name="autre" id="autre" value="Autre" class="form-control"  placeholder="300 Lettres au maximum" /><?php echo $Autre ?></textarea>
+							<textarea onblur="calculeLongueur();" onfocus="calculeLongueur();" onkeydown="calculeLongueur();" onkeyup="calculeLongueur();" name="autre" id="autre" value="" class="form-control"  placeholder="300 Lettres au maximum" /></textarea>
 							<span>Vous pouvez uploader l'image du produit</span>
-							<input type="file" name="image" >
+							<input type="file" name="image">
 						</div>
 						<!--<div>
 							<span>Vous pouvez uploader l'image du produit</span>
@@ -219,26 +227,9 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 						</div>-->
 
 
-						<input type="submit" value="Modifier" name="modifier">	
+						<input type="submit" value="Envoyer" >	
 				</div>
 			</form>
-			<?PHP
-				}
-			
-			if (isset($_POST['modifier']))
-			{
-				$target="image/".basename($_FILES['image']['name']);
-				$imagE=$_FILES['image']['name'];
-				$datetime = date_create()->format('Y-m-d H:i:s');
-			$reclamation=new Reclamation($_POST['probleme'],$_POST['autre'],$datetime,"non traitée",$_POST['email'],$Image,$Avis,$Utilisateur,$Reponse);
-			$reclamationC->modifierReclamation($reclamation,$Email);
-			?>
-			<script>
-				document.location.replace("reclamationAffichage.php") ;
-			</script>
-			<?php
-		}
-		?>
 		</div>
 	</div>
 <div class="bottom-grid1">
@@ -294,3 +285,6 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 <!---->
 </body>
 </html>
+<?php
+	}
+?>

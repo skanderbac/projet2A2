@@ -1,11 +1,27 @@
-
 <?PHP
-
-include "../core/avisC.php";
-
-        $avis1C=new AvisC();
-        $listeAvis=$avis1C->afficherAviss();
-
+require 'PHPMailer-master/PHPMailerAutoload.php';
+include "../core/reclamationC.php";
+include "../entities/reclamationE.php";
+$reclamation1C=new ReclamationC();
+$result=$reclamation1C->recupererReclamation($_GET['emaill']);
+$bouton="Répondre";
+session_start();  
+    if(!1)
+    {
+        header("location: login.php");
+    }
+    else
+    {
+    foreach($result as $row){
+        $probleme=$row['probleme'];
+        $autre=$row['autre'];
+        $date_creation=$row['date_creation'];
+        $etat=$row['etat'];
+        $email=$row['email'];
+        $image=$row['image'];
+        $avis=$row['avis'];
+        $utilisateur=$row['utilisateur'];
+        $reponse=$row['reponse'];
 ?>
 
 <!doctype html>
@@ -34,7 +50,7 @@ include "../core/avisC.php";
 
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Avis</title>
+    <title>Réclamation</title>
     <meta name="description" content="Ela Admin - HTML5 Admin Template">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -218,38 +234,92 @@ include "../core/avisC.php";
                 <div class="row">
 
 
+<div class=" cart-items">
+<div class="in-check" >
+            <h3>E-mail</h3>
+             <h5><?php echo $email?></h5>
+             <h3>Probléme</h3>
+            <h5><?PHP echo $probleme ?></h5>
+            <h3>Texte</h3>
+            <h5><?PHP echo $autre ?></h5>
+            <h3>L'etat de la réclamation</h3>
+            <h5><?PHP echo $etat ?></h5>
+            <img src="image/<?php echo $image ?>" width="128" height="128">
+            <?php 
+            }
+            
+                    ?>
+                    
+                    <?PHP
+                
+            
+            if (isset($_POST['envoyer']))
+            {
+
+                $reclamation=new Reclamation($probleme,$autre,$date_creation,"traitée",$email,$image,$avis,$utilisateur,$_POST['repons']);
+                $reclamation1C->modifierReclamation($reclamation,$email);
+
+                //require 'PHPMailer-master/PHPMailerAutoload.php';
+                $mail = new PHPMailer();
+                $mail->IsSmtp();
+                $mail->SMTPAuth = true;
+                $mail->Debugoutput='html';
+                $mail->Host = "smtp.gmail.com";
+                $mail->Port = 25;
+                $mail->isHTML(true);
+                $mail->Username = "skan.baccouche@gmail.com"; //hedha l mail ili bcih tab3eth bih inty 
+                $mail->Password = "Arekusanda1"; //mdp l mail mte3ik 
+                $mail->setFrom("skan.baccouche@gmail.com"); //nafss l mail mte3ik t3awdou 
+                $mail->Subject = "Réclamation"; //sujet mta3 l mail mte3ik
+                $mail->Body= $_POST['repons'];
+                $mail->AltBody =$_POST['repons']; //ikteb ili t7eb
+                $mail->AddAddress($email); // lmail mta3 l 3abed ili bich tab3athlou 
+                $mail->SMTPOptions = array(
+                'ssl' => array(
+                'verify_peer' => false,
+                'verify_peer_name' => false,
+                'allow_self_signed' => true
+    )
+);
 
 
-                            <table class="table table-hover">
-            <thead>
-              <tr>
-                <th>Rating</th>
-                <th>Avis</th>
-                <th>Client</th>
-                <th>Date</th>
-                </tr>
-            </thead>
 
 
-<?PHP
+            ?>
 
-foreach($listeAvis as $row){
-    ?>
-    <tr>
-    <td><?PHP echo $row['etoile']; ?></td>
-    <td><?PHP echo $row['text']; ?></td>
-     <td><?PHP echo $row['id']; ?></td>
-     <td><?PHP echo $row['date_creation']; ?></td>
-    <td><a href="dashbordsupprimer.php?id=<?PHP echo $row['id']; ?>" class="add-cart cart-check">Supprimer</a></td>
-    <td><a href="dashbordArchiver.php?id=<?PHP echo $row['id']; ?>" class="add-cart cart-check">Archiver</a></td>
-    </tr>
-    <?PHP
-}
-?>
+            <script>
+                document.location.replace("dashbordReclamation.php") ;
+            </script>
 
-</table>                                         
+            }
 
+                    <?php
+                }
+            ?>
+            <?PHP
+            }
+            if($etat=="traitée")
+                {
+                    $bouton="Modifier"
+            ?>
 
+            <h3>Votre réponse</h3>
+            <h5><?PHP echo $reponse ?></h5>
+                    <?php
+                }
+            ?>   
+            <form  method="POST" >
+                    <label>
+                      <textarea name="repons" ></textarea>
+                    </label>
+                        <label>
+                            <input type="submit" value=<?php echo $bouton ?> name="envoyer">
+                        </label>
+                        
+                    </form>                                      
+
+</div>
+</div>
 
                     <div class="col-sm-6 text-right">
                         
